@@ -1,0 +1,8 @@
+- name: shutdown servers
+  hosts: monitoring
+  remote_user: frost
+  become: true
+  gather_facts: no
+  tasks:
+    - name: shutting down
+      command: /sbin/shutdown -t now
