@@ -1,0 +1,72 @@
+- name: install apache, mysql and php
+  hosts: webservers
+  remote_user: frost
+  gather_facts: yes
+  vars:
+    dbname: monitoringdata
+    dbuser: root
+    upassword: carpediem
+  tasks:
+    - name: install web modules
+      become: true
+      apt: 
+        package: "{{ item }}"
+        state: present
+        update-cache: yes
+      with_items:
+        - apache2
+        - php
+        - php-mysql
+        - libapache2-mod-php 
+        - php-mcrypt
+
+    - name: http service state
+      service: 
+        name: apache2
+        state: started
+        enabled: yes
+
+
+    - name: install MysQL
+      become: true
+      apt: 
+        package: "{{ item }}" 
+        state: present
+        update-cache: yes
+      with_items:
+        - mysql-server
+        - python-mysqldb
+
+    - name: restart mysql
+      become: true
+      service: 
+        name: mysql
+        state: started
+        enabled: yes
+
+    - name: create application DB user
+      become: true
+      mysql_user:
+        name: "{{ dbuser }}"
+        password: "{{ upassword }}"
+        login_user: root
+        login_password: "{{ upassword }}"
+        check_implicit_admin: yes
+        priv: '*.*:ALL'
+        host: '%'
+        state: present
+
+    - name: create application database
+      become: true
+      mysql_db: 
+        name: "{{ dbname }}" 
+        state: present
+
+    - name: copy phpinfo
+      become: true
+      template: 
+        src: ../templates/info.php 
+        dest: /var/www/html/info.php 
+        owner: frost 
+        group: frost
+        mode: 0644
