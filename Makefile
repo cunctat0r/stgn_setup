@@ -7,4 +7,6 @@ roles:
 lamp:
 	ansible-playbook -i ./inventory/webservers.ini ./playbook/lamp.yml
 
+shutdown:
+	ansible-playbook -i ./inventory/webservers.ini ./playbook/shutdown.yml
 
