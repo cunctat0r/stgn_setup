@@ -1,5 +1,5 @@
 - name: shutdown servers
-  hosts: monitoring
+  hosts: webservers
   remote_user: frost
   become: true
   gather_facts: no
