@@ -1,6 +1,8 @@
 - hosts: webservers
   vars:
     path: /var/www/stgn
+    db_user: frost
+    db_password: frost
   tasks:
     - name: clone web-interface
       become: true
@@ -31,9 +33,40 @@
       become: true
       command: a2dissite 000-default.conf
 
+    - name: copy post_parameters to remote host
+      template:
+        src: ../dotfiles/post_parameters.sql
+        dest: "{{ ansible_env.HOME}}/post_parameters.sql"
+
+    - name: copy monitoringtable to remote host
+      template:
+        src: ../dotfiles/monitoringtable.sql
+        dest: "{{ ansible_env.HOME}}/monitoringtable.sql"
+
+    - name: create table post_parameters
+      mysql_db:
+        login_user: "{{ db_user }}"
+        login_password: "{{ db_password}}"
+        name: monitoringdata
+        state: import 
+        target: "{{ ansible_env.HOME}}/post_parameters.sql"
+
+    - name: create table monitoringtable
+      mysql_db:
+        login_user: "{{ db_user }}"
+        login_password: "{{ db_password }}"
+        name: monitoringdata
+        state: import
+        target: "{{ ansible_env.HOME }}/monitoringtable.sql"
+
     - name: reload apache
       become: true
       service: 
         name: apache2
         state: reloaded
 
+    - name: restart mysql
+      become: true
+      service:
+        name: mysql
+        state: restarted
