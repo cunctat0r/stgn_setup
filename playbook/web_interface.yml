@@ -1,0 +1,39 @@
+- hosts: webservers
+  vars:
+    path: /var/www/stgn
+  tasks:
+    - name: clone web-interface
+      become: true
+      git: 
+        repo: git://github.com/cunctat0r/stgn.git
+        dest: "{{ path }}"
+        update: yes
+
+    - name: Ensure directories are 0755
+      become: true
+      command: find {{ path }} -type d -exec chmod 0755 {} \;
+
+    - name: Ensure files are 0644
+      become: true
+      command: find {{ path }} -type f -exec chmod 0644 {} \;
+  
+    - name: copy Apache config
+      become: true
+      template: 
+        src: ../dotfiles/stgn.conf
+        dest: /etc/apache2/sites-available/stgn.conf
+
+    - name: enable site
+      become: true
+      command: a2ensite stgn.conf
+
+    - name: disable default site
+      become: true
+      command: a2dissite 000-default.conf
+
+    - name: reload apache
+      become: true
+      service: 
+        name: apache2
+        state: reloaded
+

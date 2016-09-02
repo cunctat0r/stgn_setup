@@ -10,3 +10,5 @@ lamp:
 shutdown:
 	ansible-playbook -i ./inventory/webservers.ini ./playbook/shutdown.yml
 
+web_interface:
+	ansible-playbook -i ./inventory/webservers.ini ./playbook/web_interface.yml
