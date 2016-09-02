@@ -43,6 +43,11 @@
         src: ../dotfiles/monitoringtable.sql
         dest: "{{ ansible_env.HOME}}/monitoringtable.sql"
 
+    - name: copy prefill_file to remote host
+      template:
+        src: "{{ prefill_file }}"
+        dest: "{{ ansible_env.HOME}}/prefill_file.sql"
+
     - name: create table post_parameters
       mysql_db:
         login_user: "{{ db_user }}"
@@ -58,6 +63,14 @@
         name: monitoringdata
         state: import
         target: "{{ ansible_env.HOME }}/monitoringtable.sql"
+
+    - name: prefill table post_parameters
+      mysql_db:
+        login_user: "{{ db_user }}"
+        login_password: "{{ db_password }}"
+        name: monitoringdata
+        state: import
+        target: "{{ ansible_env.HOME }}/prefill_file.sql"
 
     - name: reload apache
       become: true
