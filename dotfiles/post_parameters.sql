@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `post_parameters` (
   `tros1MaxWeight` float NOT NULL DEFAULT '200' COMMENT 'Максимальный вес троса 1',
   `tros2MaxWeight` float NOT NULL DEFAULT '200' COMMENT 'Максимальный вес троса 2',
   `receiver1` varchar(11) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'Приемник 1',
-  `receiver2` varchar(11) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `receiver2` varchar(11) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'Приемник 2',
   `netRegion` varchar(5) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'Сетевой район',
   `latitude` float NOT NULL DEFAULT '0' COMMENT 'Широта',
   `longitude` float NOT NULL DEFAULT '0' COMMENT 'Долгота',
