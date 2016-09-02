@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS `monitoringtable`;
 CREATE TABLE IF NOT EXISTS `monitoringtable` (
   `dateOfMeasurement` datetime NOT NULL COMMENT 'Дата измерения',
   `phoneNumber` varchar(15) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL COMMENT 'Идентификатор поста',
