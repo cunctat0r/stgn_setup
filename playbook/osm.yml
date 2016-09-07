@@ -1,0 +1,43 @@
+- hosts: webservers
+  tasks:
+    - name: apt-get upgrate
+      become: true
+      apt:
+        upgrade: yes
+        update-cache: yes
+
+    - name: install postgres and related packages
+      apt:
+        name: "{{ item}}"
+        state: present
+      with_items:
+        - postgresql
+        - postgresql-contrib
+        - postgis
+        - postgresql-9.5-postgis-2.2
+
+    - name: create postgres user osm
+
+    - name: Create a database named gis and at the same time make osm as the owner of the database
+
+    - name: Create hstore and postgis extension.
+
+    - name: Create osm user on your operating system so the tile server can run as osm user.
+
+    - name: Download the latest CartoCSS map stylesheets to the osm user’s home directory.
+
+    - name: tar xvf v2.41.0.tar.gz
+
+    - name: download map data to the osm user’s home directory
+      become_user: osm
+      command: wget -c http://download.geofabrik.de/russia-latest.osm.pbf 
+
+    - name: install osm2pgsql
+      apt:
+        name: osm2pgsql
+        state: present
+
+    - name: import to database
+      become_user: osm
+      command: osm2pgsql --slim -d gis -C 512 --hstore -S openstreetmap-carto-2.41.0/openstreetmap-carto.style russia-latest.osm.pbf
+
