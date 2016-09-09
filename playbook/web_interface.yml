@@ -10,6 +10,7 @@
         repo: git://github.com/cunctat0r/stgn.git
         dest: "{{ path }}"
         update: yes
+      tags: update_site
 
     - name: Ensure directories are 0755
       become: true
@@ -24,6 +25,7 @@
       template: 
         src: ../dotfiles/stgn.conf
         dest: /etc/apache2/sites-available/stgn.conf
+      tags: update_site
 
     - name: enable site
       become: true

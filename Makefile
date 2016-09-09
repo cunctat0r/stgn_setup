@@ -12,3 +12,7 @@ shutdown:
 
 web_interface:
 	ansible-playbook -i ./inventory/webservers.ini ./playbook/web_interface.yml 
+
+update_site:
+	ansible-playbook -i ./inventory/webservers.ini ./playbook/web_interface.yml --tags update_site 
+

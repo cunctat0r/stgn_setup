@@ -7,6 +7,7 @@
         update-cache: yes
 
     - name: install postgres and related packages
+      become: true
       apt:
         name: "{{ item}}"
         state: present
@@ -16,21 +17,53 @@
         - postgis
         - postgresql-9.5-postgis-2.2
 
+    - name: create postgresql database named gis
+      become_user: postgres
+      postgresql_db: 
+        name: gis
+        encoding: 'UTF-8'
+
     - name: create postgres user osm
+      become_user: postgres
+      postgresql_user: 
+        db: gis 
+        name: osm 
+        priv: ALL 
+        state: present
 
-    - name: Create a database named gis and at the same time make osm as the owner of the database
+    - name: Create hstore extension.
+      become_user: postgres
+      postgresql_ext: 
+        name: hstore
+        db: gis
 
-    - name: Create hstore and postgis extension.
+    - name: Create postgis extension.
+      become_user: postgres
+      postgresql_ext: 
+        name: postgis 
+        db: gis
 
     - name: Create osm user on your operating system so the tile server can run as osm user.
+      user: 
+        name: osm
+        group: osm
 
-    - name: Download the latest CartoCSS map stylesheets to the osm user’s home directory.
-
-    - name: tar xvf v2.41.0.tar.gz
-
-    - name: download map data to the osm user’s home directory
+#    - name: Download the latest CartoCSS map stylesheets to the osm users home directory.
+#      become_user: osm
+#      get_url:
+#        url: https://github.com/gravitystorm/openstreetmap-carto/archive/v2.41.0.tar.gz 
+        
+    - name: download and extract CartoCSS map stylesheets to the osm home directory
       become_user: osm
-      command: wget -c http://download.geofabrik.de/russia-latest.osm.pbf 
+      unarchive: 
+        src: https://github.com/gravitystorm/openstreetmap-carto/archive/v2.41.0.tar.gz  
+        dest: /home/osm 
+        remote_src: yes
+
+    - name: download map data to the osm users home directory
+      become_user: osm
+      get_url: 
+        url: http://download.geofabrik.de/russia-latest.osm.pbf 
 
     - name: install osm2pgsql
       apt:
@@ -39,5 +72,33 @@
 
     - name: import to database
       become_user: osm
-      command: osm2pgsql --slim -d gis -C 512 --hstore -S openstreetmap-carto-2.41.0/openstreetmap-carto.style russia-latest.osm.pbf
+      command: osm2pgsql --slim -d gis -C 256 --hstore -S openstreetmap-carto-2.41.0/openstreetmap-carto.style russia-latest.osm.pbf
+
+    - name: install mod_tile
+      become: true
+      apt:
+        name: "{{ item}}"
+        state: present
+      with_items:
+        - git 
+        - autoconf 
+        - libtool 
+        - libmapnik-dev 
+        - apache2-dev
+
+    - name: clone mod_tile
+      git:
+        repo: git://github.com/openstreetmap/mod_tile.git 
+
+    - name: Build mod_tile
+      shell: "{{ item }}"
+      args:
+        chdir: /home/frost/mod_tile
+      with_items:
+        - ./autogen.sh
+        - ./configure
+        - make
+        - sudo make install
+        - sudo make install-mod_tile
+
 
