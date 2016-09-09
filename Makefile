@@ -13,3 +13,14 @@ web_interface:
 update_site:
 	ansible-playbook -i ./inventory/webservers.ini ./playbook/web_interface.yml --tags update_site 
 
+
+lamp_local:
+	ansible-playbook -i ./inventory/localservers.ini ./playbook/lamp.yml
+
+web_interface_local:
+	ansible-playbook -i ./inventory/localservers.ini ./playbook/web_interface.yml 
+
+osm_local:
+	ansible-playbook -i ./inventory/localservers.ini ./playbook/osm.yml 
+
+.PHONY:	roles

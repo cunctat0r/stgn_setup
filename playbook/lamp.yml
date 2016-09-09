@@ -1,5 +1,4 @@
 - hosts: webservers
-  ignore_errors: yes
   become: true
   vars_files:
     - vars/main.yml
