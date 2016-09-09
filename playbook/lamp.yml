@@ -2,9 +2,30 @@
   become: true
   vars_files:
     - vars/main.yml
+
   roles:
     - geerlingguy.mysql
     - geerlingguy.apache
     - geerlingguy.php
     - geerlingguy.php-mysql
     - geerlingguy.phpmyadmin
+
+  tasks:
+    - name: install php modules
+      become: true
+      apt:
+        name: "{{ item}}"
+        state: present
+      with_items:
+        - php-mbstring
+        - libapache2-mod-php
+
+    - name: sudo phpenmod mbstring
+      become: true
+      command: phpenmod mbstring
+
+    - name: reload apache
+      service: 
+        name=apache2 
+        state=reloaded
+
