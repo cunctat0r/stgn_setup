@@ -14,6 +14,9 @@ update_site:
 	ansible-playbook -i ./inventory/webservers.ini ./playbook/web_interface.yml --tags update_site 
 
 
+prepare_local:
+	ansible-playbook -i ./inventory/localservers_prepare.ini ./playbook/prepare.yml 
+
 lamp_local:
 	ansible-playbook -i ./inventory/localservers.ini ./playbook/lamp.yml
 

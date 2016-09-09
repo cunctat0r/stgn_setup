@@ -1,0 +1,33 @@
+- hosts: webservers
+  become: yes
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: create group frost
+      group:
+        name: frost
+        state: present
+
+    - name: Create user frost
+      user: 
+        name: frost 
+        groups: frost 
+        append: yes 
+        state: present 
+        createhome: yes
+  
+    - name: Allow frost user to have passwordless sudo
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^frost'
+        line: 'frost ALL=(ALL) NOPASSWD: ALL'
+
+    - name: Set up authorized keys for the frost user
+      authorized_key: 
+        user: frost 
+        key: "{{item}}"
+      with_file:
+        - /home/vagrant/.ssh/id_rsa.pub
