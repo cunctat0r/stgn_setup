@@ -35,6 +35,15 @@
       become: true
       command: a2dissite 000-default.conf
 
+    - name: change timezone
+      become: true
+      lineinfile:
+        dest: /etc/php/7.0/apache2/php.ini
+        state: present
+        regexp: '^date.timezone'
+        line: 'date.timezone = Europe/Moscow'
+      tags: change_timezone
+
     - name: copy post_parameters to remote host
       template:
         src: ../dotfiles/post_parameters.sql

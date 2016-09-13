@@ -1,0 +1,22 @@
+- hosts: webservers
+  vars:
+    caller_manager_path: "{{ ansible_env.HOME}}/caller_manager"
+  tasks:
+    - name: install mysqltcl
+      become: true
+      apt: 
+        update-cache: yes
+        name: mysqltcl
+        state: present
+
+    - name: clone caller_manager git repository
+      git:
+        repo: git://github.com/cunctat0r/caller_manager.git
+        dest: "{{ caller_manager_path }}"
+        update: yes
+        force: yes
+
+    - name: chmod +x main.tcl
+      file: 
+        path: "{{ caller_manager_path}}/main.tcl"
+        mode: "u+x"

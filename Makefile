@@ -13,6 +13,9 @@ web_interface:
 update_site:
 	ansible-playbook -i ./inventory/webservers.ini ./playbook/web_interface.yml --tags update_site 
 
+caller_manager:
+	ansible-playbook -i ./inventory/webservers.ini ./playbook/caller_manager.yml 
+
 
 prepare_local:
 	ansible-playbook -i ./inventory/localservers_prepare.ini ./playbook/prepare.yml 
