@@ -1,0 +1,5 @@
+- name: Run docker.ubuntu
+  hosts: webservers
+  become: true
+  roles:
+    - angstwad.docker_ubuntu

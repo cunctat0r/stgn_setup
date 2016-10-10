@@ -29,4 +29,7 @@ web_interface_local:
 osm_local:
 	ansible-playbook -i ./inventory/localservers.ini ./playbook/osm.yml 
 
+docker_local:
+	ansible-playbook -i ./inventory/localservers.ini ./playbook/docker.yml 
+
 .PHONY:	roles

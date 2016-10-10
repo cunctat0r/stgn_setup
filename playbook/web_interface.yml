@@ -12,6 +12,13 @@
         update: yes
       tags: update_site
 
+    - name: copy power lines info
+      become: true
+      template:
+        src: "{{ geojson_file }}"
+        dest: "{{ path }}/leaflet/data/powerlines.geojson"
+      tags: update_site
+
     - name: Ensure directories are 0755
       become: true
       command: find {{ path }} -type d -exec chmod 0755 {} \;
