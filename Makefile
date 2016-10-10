@@ -32,4 +32,8 @@ osm_local:
 docker_local:
 	ansible-playbook -i ./inventory/localservers.ini ./playbook/docker.yml 
 
+docker_localhost:	
+	ansible-playbook -i ./inventory/localservers.ini ./playbook/docker.yml 
+
+
 .PHONY:	roles

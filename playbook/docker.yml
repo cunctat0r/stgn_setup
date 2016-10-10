@@ -1,5 +1,18 @@
 - name: Run docker.ubuntu
   hosts: webservers
   become: true
+  vars:
+    username: vagrant
   roles:
     - angstwad.docker_ubuntu
+
+  tasks:
+    - name: create docker group
+      group: 
+        name: docker 
+        state: present
+
+    - name: add current user to group docker
+      user:
+        name: "{{ username }}"
+        group: docker
